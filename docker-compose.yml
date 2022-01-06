@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  api:
+    build: 
+      context: ./
+      target: dev
+    volumes:
+      - .:/src
+    command: npm run dev
+    ports:
+      - '4000:4000'
+    environment:
+      - NODE_ENV=development
+      - PG_DATABASE=records_db
+      - PG_USERNAME=recordsapp
+      - PG_PASSWORD=makerecords
+      - RELOAD=0
+    depends_on:
+      - postgres
+  postgres:
+    container_name: records-postgres
+    restart: always
+    image: postgres:13.4
+    environment:
+      - POSTGRES_USER=recordsapp
+      - POSTGRES_DB=records_db
+      - POSTGRES_PASSWORD=makerecords
+    volumes:
+    - data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+volumes:
+  data:
